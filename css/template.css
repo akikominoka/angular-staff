@@ -1,0 +1,15 @@
+.header {
+	padding-bottom: 15px;
+}
+
+#iframe1 {
+	width: 100%;
+	height: 685px;
+	display: none;
+}
+
+#iframe2 {
+	width: 100%;
+	height: 685px;
+	display: none;
+}

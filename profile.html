@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="scholars">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>Israel Political Science Index (IPSIX)</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/template.css" rel="stylesheet" type="text/css">
+    <link href="css/ng-table.min.css" rel="stylesheet" type="text/css">
+    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <style type="text/css">
+      #map_canvas { height: 100% };
+      .fixed {
+              position: fixed;
+      }
+      .scrollit {
+              float: left;
+      }
+    </style>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/ng-table.min.js"></script>
+    <script type="text/javascript" src="js/logic.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.1.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 scrollit">
+        <div ng-controller="SclController as scholars" class="manipulate">
+          <div class="srch">
+
+            <input ng-model="query" type="text" class="form-control" placeholder="Search" id="Search">
+
+            <select ng-model="interest"> <option value="">Choose Field of Interest</option>
+                <option>Public Administration & Management</option>
+                  <option>Conflict Studies</option>
+                  <option>Middle East politics</option>
+                  <option>Israeli Politics</option>
+                  <option>Peace & War studies</option>
+                  <option>Gender and Ethnicity Politics</option>
+                  <option>Human Rights, Ethics, & Morality</option>
+                  <option>Voting and Electoral studies</option>
+                  <option>Health Politics and Policy</option>
+                  <option>Political Economy</option>
+                  <option>Diplomacy and Negotiations</option>
+                  <option>International Relations</option>
+                  <option>Law and Politics</option>
+                  <option>Political Psychology</option>
+                  <option>Science, Technology & Environmental Politics</option>
+                  <option>European Politics</option>
+                  <option>Public Policy</option>
+                  <option>Political Theory</option>
+                  <option>Migration and Citizenship</option>
+                  <option>Security Studies</option>
+                  <option>Comparative Politics</option>
+                  <option>International Organizations</option>
+                  <option>International Security</option>
+                  <option>Urban and Regional Studies</option>
+                  <option>Political Communication</option>
+                  <option>Social Politics and Policy</option>
+                  <option>Legislative Studies and Party Politics</option>
+                  <option>World Politics</option>
+                  <option>Religion and Politics</option>
+                  <option>Local Government and State Politics</option>
+                  <option>Public Opinion</option>
+                  <option>Human Rights, Ethics, & Morality</option>
+                  <option>American Politics</option>
+            </select>
+
+            <select id="frameSelection" ng-model="institution">
+              <option value="">Choose Institution</option>
+              <option>University of Haifa</option>
+              <option>Tel Aviv University</option>
+              <option>Hebrew University</option>
+              <option>Bar-Ilan University</option>
+              <option>Ben Gurion University</option>
+              <option>IDC Herzliya</option>
+              <option>Open University</option>
+              <option>Western Galilee College</option>
+              <option>Tel Aviv-Yafo College</option>
+              <option>Yezreel Valley College</option>
+              <option>Bet Berl College</option>
+              <option>Ariel University</option>
+              <option>Hadassah College</option>
+              <option>Sapir College</option>
+            </select>
+
+
+              <p>{{interest}} - {{institution}}</p>
+
+            <div class="users">
+              <div ng-repeat="user in scholars.users | institution:institution | interest:interest | filter:query">
+                <div><h2><i class="glyphicon glyphicon-user"></i>&nbsp;{{user.FirstName}} {{user.LastName}}</h2></div>
+                <div >
+                   <ul >
+                    <li ><a ng-click="scholars.institutionClicked(user.Institution)">{{user.Institution}}</a></li>
+                    <li >Unit: {{user.Unit}}
+                    <li >Active Since: {{user.FirstYearActive}}</li>
+                    <li >H-Index: <b>{{user.hIndex}}</b></li>
+                    <li >HIE(S): <b>{{user.HIE}}</b></li>
+                    <li >Interests: <b><a id="q1" ng-click="scholars.interestsClicked(user.FoI1)">{{user.FoI1}}</a>, <a id="q1" ng-click="scholars.interestsClicked(user.FoI2)">{{user.FoI2}}</a>, <a id="q1" ng-click="scholars.interestsClicked(user.FoI3)">{{user.FoI3}}</a></b></li>
+                    <li >Website: <a href="{{user.www}}">link</a></li>
+                  </ul>
+                    <ul >
+                      <li class="list-group-item list-group-item-success">Journal Publications</li>
+                      <li >2014: <span class="label label-success">{{user.j2014}}</span></li>
+                      <li >5 years: <span class="label label-success">{{user.j2014 + user.j2013 + user.j2012 + user.j2011 + user.j2010}}</span></li>
+                      <li >Overall: <span class="label label-success">{{user.j2014 + user.j2013 + user.j2012 + user.j2011 + user.j2010 + user.j20052009 + user.j20002004 + user.j19901999 + user.jPriorto1990}}</span></li>
+                    </ul>
+                    <ul >
+                      <li class="list-group-item list-group-item-warning">Citations</li>
+                      <li >2014: <span class="label label-success">{{user.c2014}}</span></li>
+                      <li >5 years: <span class="label label-success">{{user.c2014 + user.c2013 + user.c2012 + user.c2011 + user.c2010}}</span></li>
+                      <li >Overall: <span class="label label-success">{{user.c2014 + user.c2013 + user.c2012 + user.c2011 + user.c2010 + user.c20052009 + user.c20002004 + user.c19901999 + user.cPriorto1990}}</span></li>
+                    </ul>
+                    <ul >
+                      <li class="list-group-item list-group-item-info">Academic Books</li>
+                      <li >Unedited: <span class="label label-success">{{user.hbu + user.ebu}}</span></li>
+                      <li >Edited: <span class="label label-success">{{user.hbe + user.ebe}}</span></li>
+                    </ul>
+                    <ul >
+                      <li class="list-group-item list-group-item-info">Chapters In Books</li>
+                      <li >2014: <span class="label label-success">{{user.ab2014}}</span></li>
+                      <li >5 years: <span class="label label-success">{{user.ab2014 + user.ab2013 + user.ab2012 + user.ab2011 + user.ab2010}}</span></li>
+                      <li >Overall: <span class="label label-success">{{user.ab2014 + user.ab2013 + user.ab2012 + user.ab2011 + user.ab2010 + user.ab20052009 + user.ab20002004 + user.ab19901999 + user.abPriorto1990}}</span></li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-6 fixed">
+        <h4>Institutions in Israel</h4>       
+        <div id="map_canvas" map-filter style="width:500px; height:900px"></div>
+      </div>
+    </div>
+  
+        
+
+
+  </div>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript">
+
+        var $select = $('#frameSelection');
+          $('a[href="#haifa"]').click(function () {
+            $select.val( $(this).data('select') );
+          });
+      
+    </script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Animations -->
+    <script src="js/animations.js"></script>
+  </body>
+</html>
